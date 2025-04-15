@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bookstore>
+    <books>
+        <author>George Orwell</author>
+        <title>1984</title>
+        <year>1949</year>
+    </books>
+    <books>
+        <author>Harper Lee</author>
+        <title>To Kill a Mockingbird</title>
+        <year>1960</year>
+    </books>
+    <books>
+        <author>F. Scott Fitzgerald</author>
+        <title>The Great Gatsby</title>
+        <year>1925</year>
+    </books>
+    <books>
+        <author>Jane Austen</author>
+        <title>Pride and Prejudice</title>
+        <year>1813</year>
+    </books>
+    <books>
+        <author>Aldous Huxley</author>
+        <title>Brave New World</title>
+        <year>1932</year>
+    </books>
+    <books>
+        <author>Herman Melville</author>
+        <title>Moby-Dick</title>
+        <year>1851</year>
+    </books>
+    <books>
+        <author>J.D. Salinger</author>
+        <title>The Catcher in the Rye</title>
+        <year>1951</year>
+    </books>
+    <books>
+        <author>J.R.R. Tolkien</author>
+        <title>The Hobbit</title>
+        <year>1937</year>
+    </books>
+</bookstore>
