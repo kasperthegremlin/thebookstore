@@ -4,6 +4,10 @@ import jakarta.xml.bind.JAXBContext
 import java.io.StringWriter
 import java.io.StringReader
 import java.io.File
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.PreparedStatement
+
 
 @XmlRootElement(name = "book")
 data class Book(
@@ -35,6 +39,31 @@ fun deserializeBookstoreFromXml(xml: String): Bookstore {
     return unmarshaller.unmarshal(reader) as Bookstore
 }
 
+fun insertBooksIntoDB(bookstore: Bookstore) {
+    val url = "jdbc:postgresql://localhost:5432/bookstoredb"
+    val user = "kasper"
+    val password = "kasperthegremlin"
+
+    val connection: Connection = DriverManager.getConnection(url, user, password)
+
+    val insertQuery = "INSERT INTO books (title, author, year) VALUES (?, ?, ?)"
+    val statement: PreparedStatement = connection.prepareStatement(insertQuery)
+
+    for (book in bookstore.books) {
+        statement.setString(1, book.title)
+        statement.setString(2, book.author)
+        statement.setInt(3, book.year)
+        statement.addBatch()
+    }
+
+    statement.executeBatch()
+    println("Books inserted into the database successfully!")
+
+    statement.close()
+    connection.close()
+}
+
+
 fun main() {
     val bookstore = Bookstore(
         books = mutableListOf(
@@ -61,4 +90,5 @@ fun main() {
     val deserializedBookstore = deserializeBookstoreFromXml(xmlOutput)
     println("\nDeserialized Bookstore:")
     deserializedBookstore.books.forEach { println("${it.title} by ${it.author} (${it.year})") }
+    insertBooksIntoDB(deserializedBookstore)
 }
