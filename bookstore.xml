@@ -40,4 +40,9 @@
         <title>The Hobbit</title>
         <year>1937</year>
     </books>
+    <books>
+        <author>C.S. Lewis</author>
+        <title>The Lion, the Witch and the Wardrobe</title>
+        <year>1950</year>
+    </books>
 </bookstore>

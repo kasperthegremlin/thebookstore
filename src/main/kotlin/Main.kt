@@ -39,6 +39,25 @@ fun deserializeBookstoreFromXml(xml: String): Bookstore {
     return unmarshaller.unmarshal(reader) as Bookstore
 }
 
+fun insertOnlyNewBooks(connection: Connection, book: Book) {
+    // Check if the book already exists
+    val checkQuery = "SELECT COUNT(*) FROM books WHERE title = ? AND author = ?"
+    val stmt = connection.prepareStatement(checkQuery)
+    stmt.setString(1, book.title)
+    stmt.setString(2, book.author)
+    val resultSet = stmt.executeQuery()
+
+    // If the book does not exist, insert it
+    if (resultSet.next() && resultSet.getInt(1) == 0) {
+        val insertQuery = "INSERT INTO books (title, author, year) VALUES (?, ?, ?)"
+        val insertStmt = connection.prepareStatement(insertQuery)
+        insertStmt.setString(1, book.title)
+        insertStmt.setString(2, book.author)
+        insertStmt.setInt(3, book.year)
+        insertStmt.executeUpdate()
+    }
+}
+
 fun insertBooksIntoDB(bookstore: Bookstore) {
     val url = "jdbc:postgresql://localhost:5432/bookstoredb"
     val user = "kasper"
@@ -46,6 +65,7 @@ fun insertBooksIntoDB(bookstore: Bookstore) {
 
     val connection: Connection = DriverManager.getConnection(url, user, password)
 
+    /*
     val insertQuery = "INSERT INTO books (title, author, year) VALUES (?, ?, ?)"
     val statement: PreparedStatement = connection.prepareStatement(insertQuery)
 
@@ -55,11 +75,15 @@ fun insertBooksIntoDB(bookstore: Bookstore) {
         statement.setInt(3, book.year)
         statement.addBatch()
     }
+    */
+    bookstore.books.forEach { book ->
+        insertOnlyNewBooks(connection, book)
+    }
 
-    statement.executeBatch()
+    //statement.executeBatch()
     println("Books inserted into the database successfully!")
 
-    statement.close()
+    //statement.close()
     connection.close()
 }
 
@@ -74,7 +98,8 @@ fun main() {
             Book("Brave New World", "Aldous Huxley", 1932),
             Book("Moby-Dick", "Herman Melville", 1851),
             Book("The Catcher in the Rye", "J.D. Salinger", 1951),
-            Book("The Hobbit", "J.R.R. Tolkien", 1937)
+            Book("The Hobbit", "J.R.R. Tolkien", 1937),
+            Book("The Lion, the Witch and the Wardrobe", "C.S. Lewis", 1950)
         )
     )
 
@@ -90,5 +115,5 @@ fun main() {
     val deserializedBookstore = deserializeBookstoreFromXml(xmlOutput)
     println("\nDeserialized Bookstore:")
     deserializedBookstore.books.forEach { println("${it.title} by ${it.author} (${it.year})") }
-    insertBooksIntoDB(deserializedBookstore)
+    insertBooksIntoDB(bookstore)
 }
