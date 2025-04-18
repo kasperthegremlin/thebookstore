@@ -99,7 +99,7 @@ fun main() {
             Book("Moby-Dick", "Herman Melville", 1851),
             Book("The Catcher in the Rye", "J.D. Salinger", 1951),
             Book("The Hobbit", "J.R.R. Tolkien", 1937),
-            Book("The Lion, the Witch and the Wardrobe", "C.S. Lewis", 1950)
+            Book("The Lion, the Witch and the Wardrobe", "C.S. Lewis", 1950),
         )
     )
 
