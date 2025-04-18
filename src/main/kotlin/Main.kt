@@ -7,6 +7,9 @@ import java.io.File
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
+import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.event.EventListener
+import org.springframework.stereotype.Component
 
 
 @XmlRootElement(name = "book")
@@ -88,32 +91,43 @@ fun insertBooksIntoDB(bookstore: Bookstore) {
 }
 
 
-fun main() {
-    val bookstore = Bookstore(
-        books = mutableListOf(
-            Book("1984", "George Orwell", 1949),
-            Book("To Kill a Mockingbird", "Harper Lee", 1960),
-            Book("The Great Gatsby", "F. Scott Fitzgerald", 1925),
-            Book("Pride and Prejudice", "Jane Austen", 1813),
-            Book("Brave New World", "Aldous Huxley", 1932),
-            Book("Moby-Dick", "Herman Melville", 1851),
-            Book("The Catcher in the Rye", "J.D. Salinger", 1951),
-            Book("The Hobbit", "J.R.R. Tolkien", 1937),
-            Book("The Lion, the Witch and the Wardrobe", "C.S. Lewis", 1950),
-        )
-    )
+@Component
+class MainLogicRunner {
 
-    val xmlOutput = serializeBookstoreToXml(bookstore)
-    println("Serialized XML:\n$xmlOutput")
+    @EventListener(ApplicationReadyEvent::class)
+    fun onAppReady() {
 
-    val file = File("bookstore.xml")
-    file.writeText(xmlOutput)
-    println("\nXML written to bookstore.xml")
+        println("App is ready! Now running logic.")
 
-    val xmlFromFile = file.readText()
+        //fun main() {
+            val bookstore = Bookstore(
+                books = mutableListOf(
+                    Book("1984", "George Orwell", 1949),
+                    Book("To Kill a Mockingbird", "Harper Lee", 1960),
+                    Book("The Great Gatsby", "F. Scott Fitzgerald", 1925),
+                    Book("Pride and Prejudice", "Jane Austen", 1813),
+                    Book("Brave New World", "Aldous Huxley", 1932),
+                    Book("Moby-Dick", "Herman Melville", 1851),
+                    Book("The Catcher in the Rye", "J.D. Salinger", 1951),
+                    Book("The Hobbit", "J.R.R. Tolkien", 1937),
+                    Book("The Lion, the Witch and the Wardrobe", "C.S. Lewis", 1950),
+                )
+            )
 
-    val deserializedBookstore = deserializeBookstoreFromXml(xmlOutput)
-    println("\nDeserialized Bookstore:")
-    deserializedBookstore.books.forEach { println("${it.title} by ${it.author} (${it.year})") }
-    insertBooksIntoDB(bookstore)
+            val xmlOutput = serializeBookstoreToXml(bookstore)
+            println("Serialized XML:\n$xmlOutput")
+
+            val file = File("bookstore.xml")
+            file.writeText(xmlOutput)
+            println("\nXML written to bookstore.xml")
+
+            val xmlFromFile = file.readText()
+
+            val deserializedBookstore = deserializeBookstoreFromXml(xmlOutput)
+            println("\nDeserialized Bookstore:")
+            deserializedBookstore.books.forEach { println("${it.title} by ${it.author} (${it.year})") }
+            insertBooksIntoDB(bookstore)
+
+        //}
+    }
 }
