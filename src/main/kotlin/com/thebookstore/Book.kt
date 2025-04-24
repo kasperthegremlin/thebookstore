@@ -1,10 +1,14 @@
+package com.thebookstore
+
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Column
+import jakarta.persistence.*
 
 @Entity
+@Table(name = "books")
 data class BookEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
