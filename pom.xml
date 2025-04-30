@@ -18,7 +18,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <kotlin.version>2.1.10</kotlin.version>
+        <kotlin.version>1.9.24</kotlin.version>
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -55,10 +55,27 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                <dependency>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <artifactId>kotlin-maven-allopen</artifactId>
+                    <version>${kotlin.version}</version>
+                </dependency>
+                </dependencies>
                 <configuration>
+                    <jvmTarget>${kotlin.compiler.jvmTarget}</jvmTarget>
                     <compilerPlugins>
-                        <plugin>spring</plugin>
+                        <plugin>all-open</plugin>
                     </compilerPlugins>
+                    <pluginOptions>
+                        <option>all-open:annotation=org.springframework.stereotype.Component</option>
+                        <option>all-open:annotation=org.springframework.transaction.annotation.Transactional</option>
+                        <option>all-open:annotation=org.springframework.web.bind.annotation.RestController</option>
+                        <option>all-open:annotation=jakarta.persistence.Entity</option>
+                    </pluginOptions>
+                    <args>
+                        <arg>-Xjsr305=strict</arg>
+                    </args>
                 </configuration>
             </plugin>
 
@@ -130,11 +147,12 @@
             <artifactId>kotlin-reflect</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-allopen</artifactId>
+            <artifactId>kotlin-spring</artifactId>
             <version>${kotlin.version}</version>
-        </dependency>
+        </dependency-->
+
 
         <!-- JAXB -->
         <dependency>
@@ -159,7 +177,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.6</version>
+            <!--version>1.4.6</version-->
         </dependency>
 
         <!-- XML Unit -->
@@ -173,7 +191,7 @@
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
-            <version>10.1.20</version>
+            <!--version>10.1.20</version-->
         </dependency>
     </dependencies>
 </project>
