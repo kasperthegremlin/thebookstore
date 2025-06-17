@@ -1,0 +1,32 @@
+image: maven:3.9.4-eclipse-temurin-17
+
+stages:
+  - build
+  - test
+
+cache:
+  paths:
+    - .m2/repository
+
+build:
+  stage: build
+  script:
+    - mvn clean compile
+
+test:
+  stage: test
+  script:
+    - mvn test
+
+docker-build:
+  stage: deploy
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  variables:
+    DOCKER_DRIVER: overlay2
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+  script:
+    - docker build -t "$CI_REGISTRY_IMAGE:latest" .
+    - docker push "$CI_REGISTRY_IMAGE:latest"
